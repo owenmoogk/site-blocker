@@ -12,4 +12,9 @@ chrome.runtime.onInstalled.addListener(function() {
 	  }
 	})
   });
-  
+  	chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+		if (request.message === 'number') {
+			console.log('we got a runner')
+		}
+	})
+});
