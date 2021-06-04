@@ -1,8 +1,12 @@
 {
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"name": "No More Youtube",
 	"version": "1.0.0",
 	"description": "Owen is not allowed to watch youtube",
+
+	"action":{
+		"default_popup": "popup/popup.html"
+	},
 
 	"content_scripts": [
 		{
@@ -17,10 +21,11 @@
 	],
 
 	"background":{
-		"scripts": ["background.js"]
+		"service_worker": "background.js"
 	},
 
 	"permissions": [
-		"tabs"
+		"tabs",
+		"storage"
 	]
 }
