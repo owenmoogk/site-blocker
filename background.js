@@ -4,11 +4,8 @@ chrome.runtime.onInstalled.addListener(function () {
 
 	// if a tab is updated, send a message to the frontend
 	chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-		if (changeInfo.status === 'complete') {
-			chrome.tabs.sendMessage(tabId, {
-				message: 'TabUpdated'
-			});
-		}
+		console.log(changeInfo)
+		chrome.tabs.sendMessage(tabId, {message: 'TabUpdated'});
 	})
 
 	chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
