@@ -1,31 +1,42 @@
 {
-	"manifest_version": 3,
-	"name": "No More Youtube",
 	"version": "1.0.0",
-	"description": "Owen is not allowed to watch youtube",
-
-	"action":{
-		"default_popup": "popup/popup.html"
+	"manifest_version": 2,
+	"name": "Site blocker",
+	"options_page": "options/options.html",
+	"browser_action": {
+		"default_popup": "popup.html"
 	},
-
+	"background": {
+		"scripts": [
+			"jquery.js",
+			"background.js"
+		]
+	},
 	"content_scripts": [
 		{
-			"matches": [
-				"https://*/*",
-				"http://*/*"
-			],
 			"js": [
-				"content.js"
-			]
+				"jquery.js",
+				"content_script.js"
+			],
+			"matches": [
+				"<all_urls>"
+			],
+			"run_at": "document_start"
+		},
+		{
+			"js": [
+				"jquery.js"
+			],
+			"matches": [
+				"<all_urls>"
+			],
+			"run_at": "document_end"
 		}
 	],
-
-	"background":{
-		"service_worker": "background.js"
-	},
-
 	"permissions": [
-		"tabs",
-		"storage"
+		"contextMenus",
+		"webRequest",
+		"webRequestBlocking",
+		"<all_urls>"
 	]
 }
