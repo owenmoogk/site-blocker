@@ -3,24 +3,16 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Block Site Option Page</title>
+
+	<title>Block Site</title>
+
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/styles.css" rel="stylesheet">
 
 	<script src="../jquery.js"></script>
-	<script src="js/bootstrap.js"></script>
+	<script src="js/main.js"></script>
 
-	<script type="text/javascript" src="js/angular.js"></script>
-	<script type="text/javascript" src="app.js"></script>
-	<script type="text/javascript" src="js/HelperService.js"></script>
-	<script type="text/javascript" src="js/checkbox.directive.js"></script>
-	<script type="text/javascript" src="js/filter.js"></script>
-	<script type="text/javascript" src="js/notify.js"></script>
-	<script type="text/javascript" src="js/custom.js"></script>
-
-	<script type="text/javascript" src="tags-input/tagsInput.js"></script>
-	<script type="text/javascript" src="tags-input/tagItem.js"></script>
 	<link rel="stylesheet" href="tags-input/style.css">
 	<link rel="stylesheet" href="checkbox.css">
 
@@ -34,45 +26,8 @@
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="/options/options.html"><span>Block</span> Site</a>
-				<ul class="nav navbar-top-links navbar-right">
-
-					<li class="dropdown" title="Contact us">
-						<a class="dropdown-toggle count-info" href="mailto:rekilamneropysa@gmail.com" target="_blank">
-							<em class="fa fa-envelope"></em><span class="label label-danger"></span>
-						</a>
-
-					</li>
-					<li class="dropdown notification-li" title="Notifications">
-						<a class="dropdown-toggle count-info" ng-click="not.show = !not.show" href="#">
-
-							<em class="fa fa-bell"></em>
-							<span class="label label-danger" ng-if="not.unRead > 0">{{ not.unRead }} </span>
-
-						</a>
-						<ul class="dropdown-menu dropdown-alerts notification"
-							ng-style="not.show ? {'display': 'block'} : {'display': 'none'}">
-
-							<li ng-repeat="item in not.list track by $index" class="notification">
-								<a ng-href="{{ item.url }}" target="_blank">
-									<div>
-										{{ item.title }}
-									</div>
-								</a>
-								<em ng-show="not.read.includes(item.id)"
-									class="message fa fa-envelope pull-right text-muted small">
-								</em>
-								<em ng-show="!not.read.includes(item.id)"
-									class="message fa fa-envelope pull-right text-muted small read" title="Mark as read"
-									ng-click="setRead(item.id)">
-								</em>
-							</li>
-							<li ng-if="not.list.length === 0"></li>
-
-						</ul>
-					</li>
-				</ul>
 			</div>
-		</div><!-- /.container-fluid -->
+		</div>
 	</nav>
 
 	<!-- sidebar nav -->
