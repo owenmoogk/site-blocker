@@ -1,0 +1,283 @@
+<html ng-app="siteBlocker">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Block Site Option Page</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/font-awesome.min.css" rel="stylesheet">
+	<link href="css/styles.css" rel="stylesheet">
+
+	<script src="../jquery.js"></script>
+	<script src="js/bootstrap.js"></script>
+
+	<script type="text/javascript" src="js/angular.js"></script>
+	<script type="text/javascript" src="app.js"></script>
+	<script type="text/javascript" src="js/HelperService.js"></script>
+	<script type="text/javascript" src="js/checkbox.directive.js"></script>
+	<script type="text/javascript" src="js/filter.js"></script>
+	<script type="text/javascript" src="js/notify.js"></script>
+	<script type="text/javascript" src="js/custom.js"></script>
+
+	<script type="text/javascript" src="tags-input/tagsInput.js"></script>
+	<script type="text/javascript" src="tags-input/tagItem.js"></script>
+	<link rel="stylesheet" href="tags-input/style.css">
+	<link rel="stylesheet" href="checkbox.css">
+
+
+</head>
+
+<body ng-controller="MainController">
+
+	<!-- top navbar -->
+	<nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/options/options.html"><span>Block</span> Site</a>
+				<ul class="nav navbar-top-links navbar-right">
+
+					<li class="dropdown" title="Contact us">
+						<a class="dropdown-toggle count-info" href="mailto:rekilamneropysa@gmail.com" target="_blank">
+							<em class="fa fa-envelope"></em><span class="label label-danger"></span>
+						</a>
+
+					</li>
+					<li class="dropdown notification-li" title="Notifications">
+						<a class="dropdown-toggle count-info" ng-click="not.show = !not.show" href="#">
+
+							<em class="fa fa-bell"></em>
+							<span class="label label-danger" ng-if="not.unRead > 0">{{ not.unRead }} </span>
+
+						</a>
+						<ul class="dropdown-menu dropdown-alerts notification"
+							ng-style="not.show ? {'display': 'block'} : {'display': 'none'}">
+
+							<li ng-repeat="item in not.list track by $index" class="notification">
+								<a ng-href="{{ item.url }}" target="_blank">
+									<div>
+										{{ item.title }}
+									</div>
+								</a>
+								<em ng-show="not.read.includes(item.id)"
+									class="message fa fa-envelope pull-right text-muted small">
+								</em>
+								<em ng-show="!not.read.includes(item.id)"
+									class="message fa fa-envelope pull-right text-muted small read" title="Mark as read"
+									ng-click="setRead(item.id)">
+								</em>
+							</li>
+							<li ng-if="not.list.length === 0"></li>
+
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div><!-- /.container-fluid -->
+	</nav>
+
+	<!-- sidebar nav -->
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+
+		<div class="divider"></div>
+		<ul class="nav menu">
+			<li ng-click="currentPage = 'dashboard'" ng-class="currentPage == 'dashboard' ? 'active'  : ''">
+				<a><i class="fa fa-align-justify"></i> Dashboard</a>
+			</li>
+			<li id="modalBtn" ng-click="showLoadModal()" data-toggle="modal" data-target="#myModal">
+				<a><i class="fa fa-arrow-circle-down"></i> Load sites</a>
+			</li>
+
+		</ul>
+
+
+	</div>
+
+	<!-- three main rows -->
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="/options/options.html">
+						<em class="fa fa-home"></em>
+					</a></li>
+				<li class="active" ng-if="currentPage == 'dashboard'">Dashboard</li>
+				<li class="active" ng-if="currentPage == 'extra_config'">Extra Configs</li>
+
+			</ol>
+		</div>
+		<!--/.row-->
+
+		<div class="row" id="dashboard" ng-show="currentPage == 'dashboard'">
+			<div class="col-lg-12">
+				<div class="input-group">
+					<input type="text" class="form-control input-md" placeholder="Add site to block" id="custom_site"
+						ng-model="newSite" ng-class="{ 'error' : errorSite}"
+						ng-keydown="$event.keyCode === 13 && addSite()">
+					<span class="input-group-btn">
+						<button class="btn btn-primary btn-md" ng-click="addSite()">
+							Add
+						</button>
+					</span>
+				</div>
+
+
+			</div>
+
+
+
+			<div class="col-lg-12">
+				<br>
+
+				<div class="table-responsive">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>
+									Blocked List ({{ siteList.length }})
+									<span ng-click="sortList()"><i class="fa fa-sort"></i></span>
+								</th>
+								<th class="action_btns">
+									<div class="btn-group" ng-show="siteList.length > 0">
+										<button class="btn btn-primary" ng-click="saveChanges()" title="Save changes">
+											<i class="fa fa-save"></i>
+										</button>
+										<button class="btn" ng-click="clearList()" title="Clear List">
+											<i class="fa fa-trash"></i>
+										</button>
+									</div>
+								</th>
+
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="site in siteList | orderBy:'toString()':sortReverse track by $index">
+								<td class='site_name'>
+									<a ng-href="{{'http://' + site }}" target='_blank'>{{ site }}</a>
+								</td>
+								<td class='td_btn'>
+									<i class="fa fa-minus-circle" ng-click="removeSite(site)"></i>
+								</td>
+							</tr>
+
+
+						</tbody>
+					</table>
+				</div>
+
+				<p class="text-center">
+					<button class="btn btn-primary" ng-click="saveChanges()">
+						<i class="fa fa-save"></i> Save changes
+					</button>
+				</p>
+
+				<div class="iframe-container">
+					<iframe src="" frameborder="0" width="100%" height="220"></iframe>
+				</div>
+
+
+			</div>
+
+		</div>
+		<!--/.row-->
+
+
+	</div>
+	<!--/.main-->
+
+	<!--Modals-->
+	<div id="myModal" class="modal fade" role="dialog">
+
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4>Load site list to block</h4>
+				</div>
+				<div class="modal-body">
+					<p> Enter site list to block separated by new line (with 'enter')</p>
+					<p>
+						<textarea class="form-control" rows="10" id="site_list" ng-model="loadDataListModel">
+                    </textarea>
+					</p>
+					<p>
+						<button class="btn btn-md btn-primary" id="load_list" ng-click="loadSiteDataList()">
+							Load
+						</button>
+					</p>
+					<div id="footer_result">
+						<p ng-repeat="item in loadDataResult">
+							<b ng-class="item.className">
+								{{ item.site }}
+							</b>
+							{{ item.message }}
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div id="synchronize_modal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4>Synchronization/Uninstall protection</h4>
+				</div>
+				<div class="modal-body">
+					<div>
+						<label for="key_input">Enter your key</label>
+						<input type="text" class="form-control" id="key_input" placeholder="Key" ng-model="keyInput">
+					</div>
+					<p ng-show="showPassInput">
+						<label for="synch-modal-password">Enter password</label>
+						<input type="password" ng-model="synchModalPassword" class="form-control"
+							id="synch-modal-password">
+					</p>
+					<br>
+					<p>
+						<button class="btn btn-primary" ng-click="synchronizeSaveToDb()">
+							<i class="fa fa-arrow-circle-up"></i> Save to Server
+						</button>
+
+						<button class="btn btn-danger pull-right" ng-click="synchronizeLoadFromExternal()">
+							<i class="fa fa-arrow-circle-down"></i> Load From Server
+						</button>
+					</p>
+
+
+					<div class="alert bg-danger" role="alert" ng-if="keyError">
+						<em class="fa fa-lg fa-warning">&nbsp;</em>
+						<strong>Error: </strong> {{ keyError }}
+						<a href="#" class="pull-right" ng-click="hideAlert()">
+							<em class="fa fa-lg fa-close"></em>
+						</a>
+					</div>
+
+					<div class="alert bg-info" role="alert" ng-if="infoKey">
+						<em class="fa fa-lg fa-warning">&nbsp;</em>
+						{{ infoKey }}
+						<a href="#" class="pull-right" ng-click="hideAlert()">
+							<em class="fa fa-lg fa-close"></em>
+						</a>
+					</div>
+
+					<br /> <br />
+
+				</div>
+				<div class="modal-footer">
+					<div>
+						<a href="" target="_blank" class="pull-left">Get Premium Key</a>
+
+						<a href="" target="_blank">Demo</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+
+</html>
