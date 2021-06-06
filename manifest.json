@@ -2,7 +2,7 @@
 	"version": "1.0.0",
 	"manifest_version": 2,
 	"name": "Site blocker",
-	"options_page": "options/options.html",
+	"options_page": "webpage/build/index.html",
 	"browser_action": {
 		"default_popup": "popup.html"
 	},
