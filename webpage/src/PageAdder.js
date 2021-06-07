@@ -12,7 +12,6 @@ export default function PageAdder() {
 				return element != websiteToBeRemoved; 
 			}
 		))
-		saveWebsites()
 	}
 
 	function saveWebsites(){
@@ -24,7 +23,6 @@ export default function PageAdder() {
 			if (websites.indexOf(newWebsite) == -1){
 				setWebsites(websites.concat([newWebsite]))
 				setNewWebsite('')
-				saveWebsites()
 				setErrorMessage('')
 			}
 			else{
@@ -104,11 +102,11 @@ export default function PageAdder() {
 						</table>
 					</div>
 
-					{/* <p className="text-center">
+					<p className="text-center">
 						<button className="btn btn-primary" onClick={() => saveWebsites()}>
 							<i className="fa fa-save"></i> Save changes
 						</button>
-					</p> */}
+					</p>
 
 				</div>
 
