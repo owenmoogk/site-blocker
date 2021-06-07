@@ -6,6 +6,11 @@ body {
     font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+.main{
+	width: 80%;
+	margin: auto;
+}
+
 p {
     color: #777;
 }
@@ -813,7 +818,6 @@ a.label:hover, a.label:focus {
 }
 
 .user-menu {
-    display: inline-block;
     margin-top: 14px;
     margin-right: 10px;
     float: right;
