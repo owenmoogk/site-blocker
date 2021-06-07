@@ -31,6 +31,8 @@ chrome.tabs.query({}, function (results) {
 chrome.webRequest.onBeforeRequest.addListener(
 	function (details) {
 
+		blockedSites = JSON.parse(localStorage.getItem('sites')) || [];
+
 		// Do not block main frame request
 		if (details.type === 'main_frame') {
 			return;
@@ -59,6 +61,8 @@ chrome.webRequest.onBeforeRequest.addListener(
 // this is something that is passed from the frontend, decides if the website should be blocked and then sends a response
 chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
 	if (request.host) {
+
+		blockedSites = JSON.parse(localStorage.getItem('sites')) || [];
 
 		_current_site = request.value;
 		var _fullsite = request.site;
