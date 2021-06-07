@@ -10,7 +10,7 @@ export default function App() {
 	function removeWebsite(websiteToBeRemoved) {
 		setWebsites(websites.filter(
 			function (element) {
-				return element != websiteToBeRemoved;
+				return element !== websiteToBeRemoved;
 			}
 		))
 	}
@@ -21,7 +21,7 @@ export default function App() {
 
 	function addWebsite() {
 		if ((!newWebsite.includes(' ')) && newWebsite.includes('.')) {
-			if (websites.indexOf(newWebsite) == -1) {
+			if (websites.indexOf(newWebsite) === -1) {
 				setWebsites(websites.concat([newWebsite]))
 				setNewWebsite('')
 				setErrorMessage('')
@@ -48,7 +48,7 @@ export default function App() {
 			<nav class="navbar navbar-custom navbar-fixed-top">
 				<div class="container-fluid">
 					<div class="navbar-header">
-						<a class="navbar-brand" href="#"><span>Block</span> Site</a>
+						<a class="navbar-brand"><span>Block</span> Site</a>
 					</div>
 				</div>
 			</nav>
@@ -99,7 +99,7 @@ export default function App() {
 										return (
 											<tr key={i}>
 												<td className='site_name'>
-													<a target='_blank'>{website}</a>
+													<a>{website}</a>
 												</td>
 												<td className='td_btn'>
 													<i className="fa fa-minus-circle" onClick={() => removeWebsite(website)}></i>
