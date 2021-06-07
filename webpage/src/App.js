@@ -106,14 +106,7 @@ export default function App() {
 											Redirects
 										</th>
 										<th className="action_btns">
-											<div className="btn-group">
-												<button className="btn btn-primary" title="Save changes">
-													<i className="fa fa-save"></i>
-												</button>
-												<button className="btn" title="Clear List">
-													<i className="fa fa-trash"></i>
-												</button>
-											</div>
+											Delete
 										</th>
 
 									</tr>
