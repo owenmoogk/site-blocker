@@ -1,4 +1,4 @@
-var _current_site = '';
+var currentSite = '';
 var blocked = false;
 var blockedSites = JSON.parse(localStorage.getItem('sites')) || [];
 var redirectUrl = localStorage.getItem('redirect_url');
@@ -64,12 +64,12 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
 
 		blockedSites = JSON.parse(localStorage.getItem('sites')) || [];
 
-		_current_site = request.value;
-		var _fullsite = request.site;
-		_fullsite = getLocation(_fullsite).hostname + decodeURIComponent(getLocation(_fullsite).pathname);
-		_fullsite = _fullsite.replace('www.', '');
-		_fullsite = _fullsite.replace('http://', '');
-		_fullsite = _fullsite.replace('https://', '');
+		currentSite = request.value;
+		var fullSite = request.site;
+		fullSite = getLocation(fullSite).hostname + decodeURIComponent(getLocation(fullSite).pathname);
+		fullSite = fullSite.replace('www.', '');
+		fullSite = fullSite.replace('http://', '');
+		fullSite = fullSite.replace('https://', '');
 
 		var isSiteInList = has_prop(blockedSites, request.value);
 
@@ -78,15 +78,15 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
 		var blockPattern = isEqual('blockPattern', 1);
 
 
-		blockSubdomains = blockSubdomains && isSubdomainInList(blockedSites, _current_site);
-		var isBlockedByTag = blockKeyOption && isBlockedByKey(_current_site, _fullsite);
-		var blockByPattern = isBlockedByPattern(blockKeyOption, blockPattern, _current_site);
+		blockSubdomains = blockSubdomains && isSubdomainInList(blockedSites, currentSite);
+		var isBlockedByTag = blockKeyOption && isBlockedByKey(currentSite, fullSite);
+		var blockByPattern = isBlockedByPattern(blockKeyOption, blockPattern, currentSite);
 
 		//If in block or subdomain list or contains blocked keys
 		if (isSiteInList || blockSubdomains || isBlockedByTag || blockByPattern) {
 			blocked = true;
 
-			if (redirectUrl && !redirectUrl.includes(_current_site) && !_current_site.includes(redirectUrl)) {
+			if (redirectUrl && !redirectUrl.includes(currentSite) && !currentSite.includes(redirectUrl)) {
 				chrome.tabs.update(sender.tab.id, { url: redirectUrl });
 				return;
 			}
@@ -138,32 +138,32 @@ function isEqual(key, val) {
 }
 
 function onClickHandler(info, tab) {
-	_current_site = getLocation(info.pageUrl);
-	_current_site = _current_site.host.replace('www.', '');
+	currentSite = getLocation(info.pageUrl);
+	currentSite = currentSite.host.replace('www.', '');
 	currentSiteHost = false;
-	if (_current_site === 'offfjidagceabmodhpcngpemnnlojnhn') {
+	if (currentSite === 'offfjidagceabmodhpcngpemnnlojnhn') {
 		return;
 	}
 
 	var action_type = '';
 	var blockSubdomains = isEqual('subdomainOption', 1);
 	if (blockSubdomains) {
-		currentSiteHost = isSubdomainInList(blockedSites, _current_site, true);
+		currentSiteHost = isSubdomainInList(blockedSites, currentSite, true);
 	}
-	if (has_prop(blockedSites, _current_site) || currentSiteHost) {
+	if (has_prop(blockedSites, currentSite) || currentSiteHost) {
 		if (currentSiteHost) {
-			//_current_site ru-ru.facebook.com, will become facebook.com 
-			_current_site = currentSiteHost;
+			//currentSite ru-ru.facebook.com, will become facebook.com 
+			currentSite = currentSiteHost;
 		}
 
-		blockedSites = remove_site(blockedSites, _current_site);
+		blockedSites = remove_site(blockedSites, currentSite);
 
 		localStorage.sites = JSON.stringify(blockedSites);
 		action_type = 'unblock';
 
 	}
 	else {
-		blockedSites = add_to_block(blockedSites, _current_site);
+		blockedSites = add_to_block(blockedSites, currentSite);
 		localStorage.sites = JSON.stringify(blockedSites);
 		action_type = 'block';
 	}
@@ -216,13 +216,13 @@ function has_prop(arr, val) {
 	return arr.includes(val);
 }
 
-function isBlockedByPattern(blockKeyOption, blockPattern, _current_site) {
+function isBlockedByPattern(blockKeyOption, blockPattern, currentSite) {
 	if (!blockKeyOption || !blockPattern) return false;
 	var blockPatternFlag = localStorage.getItem('blockPatternFlag');
 	if (blockPatternFlag) {
-		return (new RegExp(blockPattern, blockPatternFlag)).test(_current_site);
+		return (new RegExp(blockPattern, blockPatternFlag)).test(currentSite);
 	} else {
-		return (new RegExp(blockPattern)).test(_current_site);
+		return (new RegExp(blockPattern)).test(currentSite);
 	}
 
 }
@@ -240,10 +240,10 @@ function isSubdomainInList(data, site, getSite) {
 	return false;
 }
 
-function isBlockedByKey(site, _fullsite) {
+function isBlockedByKey(site, fullSite) {
 	var blockedKeys = JSON.parse(localStorage.getItem('blockKeyList')) || [];
 	for (var i = 0; i < blockedKeys.length; i++) {
-		if (site.indexOf(blockedKeys[i]) > -1 || _fullsite.indexOf(blockedKeys[i]) > -1) {
+		if (site.indexOf(blockedKeys[i]) > -1 || fullSite.indexOf(blockedKeys[i]) > -1) {
 			return true;
 		}
 	}
