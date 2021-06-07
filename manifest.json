@@ -8,29 +8,18 @@
 	},
 	"background": {
 		"scripts": [
-			"jquery.js",
 			"background.js"
 		]
 	},
 	"content_scripts": [
 		{
 			"js": [
-				"jquery.js",
 				"content_script.js"
 			],
 			"matches": [
 				"<all_urls>"
 			],
 			"run_at": "document_start"
-		},
-		{
-			"js": [
-				"jquery.js"
-			],
-			"matches": [
-				"<all_urls>"
-			],
-			"run_at": "document_end"
 		}
 	],
 	"permissions": [
