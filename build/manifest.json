@@ -1,0 +1,38 @@
+{
+	"version": "1.0.0",
+	"manifest_version": 2,
+	"name": "Site blocker",
+	"icons": {
+		"16": "16.png",
+		"32": "32.png",
+		"48": "48.png",
+		"128": "128.png",
+		"512": "512.png"
+	},
+	"options_page": "webpage/build/index.html",
+	"browser_action": {
+		"default_popup": "popup.html"
+	},
+	"background": {
+		"scripts": [
+			"background.js"
+		]
+	},
+	"content_scripts": [
+		{
+			"js": [
+				"content_script.js"
+			],
+			"matches": [
+				"<all_urls>"
+			],
+			"run_at": "document_start"
+		}
+	],
+	"permissions": [
+		"contextMenus",
+		"webRequest",
+		"webRequestBlocking",
+		"<all_urls>"
+	]
+}

@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Site BLocker</title>
+	<style>
+		body {
+			margin: 0px;
+			padding: 0px;
+		}
+
+		.header {
+			text-align: center;
+			background-color: #30a5ff;
+			font-weight: bold;
+		}
+
+		p {
+			font-size: 16px
+		}
+
+		.div_blocked {
+			width: 180px;
+		}
+
+		.span1 {
+			color: #FFF;
+			font-size: 18px;
+			padding: 5px;
+			display: block;
+		}
+
+		.div_blocked p {
+			margin-bottom: 0px;
+			text-align: center;
+		}
+
+		.div_blocked strong {
+			font-size: 24px;
+			color: red;
+			cursor: pointer;
+		}
+
+		a,
+		a:visited {
+			color: #1a87db;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+	</style>
+</head>
+
+<body>
+
+
+	<div class="header">
+		<span class="span1"> Block Site </span>
+	</div>
+
+	<div class="div_blocked">
+		<p>Total blocked sites </p>
+		<p><strong id="count">0</strong></p>
+
+	</div>
+
+	<p align="center">
+		<a href="webpage/build/index.html" target="_blank">Option Page</a>
+	</p>
+	<script src="counter.js"></script>
+</body>
+
+</html>
