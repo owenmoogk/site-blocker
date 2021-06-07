@@ -66,7 +66,6 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
 		if (fullSite.endsWith('/')){
 			fullSite = fullSite.slice(0, -1)
 		}
-		console.log(fullSite)
 		host = request.value
 		
 		// to block all subpages use the host (value), to only block this page use the site
@@ -110,19 +109,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 	else sendResponse({});
 });
-
-function isSubdomainInList(data, site, getSite) {
-	data = data || [];
-
-	for (var i = 0; i < data.length; i++) {
-		// facebook.com become .facebook.com
-		var current = '.' + data[i];
-		if (site.endsWith(current)) {
-			return getSite ? data[i] : true;
-		}
-	}
-	return false;
-}
 
 function getLocation(href) {
 	var l = document.createElement("a");
