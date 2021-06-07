@@ -65,12 +65,13 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
 		fullSite = fullSite.replace('http://', '');
 		fullSite = fullSite.replace('https://', '');
 
-		var isSiteInList = has_prop(blockedSites, request.value);
-
-
-
-
-		//If in block or subdomain list or contains blocked keys
+		var isSiteInList;
+		var redirect;
+		for (var currSite of blockedSites){
+			if (currSite.block == request.value){
+				isSiteInList = true
+				redirect = currSite.redirect
+				break
 			}
 		}
 
@@ -116,11 +117,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 	else sendResponse({});
 });
-
-
-function has_prop(arr, val) {
-	return arr.includes(val);
-}
 
 function isSubdomainInList(data, site, getSite) {
 	data = data || [];
