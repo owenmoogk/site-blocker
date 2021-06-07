@@ -4,12 +4,6 @@ var blockedSites = JSON.parse(localStorage.getItem('sites')) || [];
 var redirectUrl = localStorage.getItem('redirect_url');
 var activeTabs = {};
 
-var cmid = chrome.contextMenus.create({
-	'title': 'Block this site',
-	'contexts': ['all', 'page'],
-	'onclick': onClickHandler
-});
-
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 	activeTabs[tab.id] = tab;
 });
@@ -92,80 +86,10 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
 			blocked = false;
 		}
 
-		var text = 'Block this site';
-		if (isSiteInList || blockSubdomains) text = 'Unblock this site';
-		options = {
-			'title': text,
-			'contexts': ["all", "page"],
-			'onclick': onClickHandler
-		}
-
-		chrome.contextMenus.removeAll();
-		chrome.contextMenus.create(options);
-
-		// If blocked by key and not in site list
-		if (blockKeyOption && !isSiteInList) {
-			chrome.contextMenus.remove(cmid);
-			type = 'Blocked by key config';
-		}
-
-		sendResponse({ host: blocked });
 		sendResponse({ host: blocked, redirect: redirect });
 
 	}
 });
-
-function isEqual(key, val) {
-	return +localStorage.getItem(key) === val;
-}
-
-function onClickHandler(info, tab) {
-	currentSite = getLocation(info.pageUrl);
-	currentSite = currentSite.host.replace('www.', '');
-	currentSiteHost = false;
-	if (currentSite === 'offfjidagceabmodhpcngpemnnlojnhn') {
-		return;
-	}
-
-	var action_type = '';
-	var blockSubdomains = isEqual('subdomainOption', 1);
-	if (blockSubdomains) {
-		currentSiteHost = isSubdomainInList(blockedSites, currentSite, true);
-	}
-	if (has_prop(blockedSites, currentSite) || currentSiteHost) {
-		if (currentSiteHost) {
-			//currentSite ru-ru.facebook.com, will become facebook.com 
-			currentSite = currentSiteHost;
-		}
-
-		blockedSites = remove_site(blockedSites, currentSite);
-
-		localStorage.sites = JSON.stringify(blockedSites);
-		action_type = 'unblock';
-
-	}
-	else {
-		blockedSites = add_to_block(blockedSites, currentSite);
-		localStorage.sites = JSON.stringify(blockedSites);
-		action_type = 'block';
-	}
-
-	// send to content_script
-	chrome.tabs.query(
-		{
-			active: true, 
-			currentWindow: true 
-		}, 
-		function (tabs) {
-			chrome.tabs.sendMessage(
-				tabs[0].id, 
-				{ action: action_type }, 
-				function (response) {}
-			);
-		}
-	);
-
-}
 
 // For option page show all sites
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
