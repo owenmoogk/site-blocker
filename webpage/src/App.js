@@ -126,7 +126,10 @@ export default function App() {
 													<a>{website.block}</a>
 												</td>
 												<td className='site_name'>
-													<a>{website.redirect}</a>
+													{website.redirect == '#'
+														? <p>None</p>
+														: <a href={website.redirect} target="_blank">{website.redirect}</a>
+													}
 												</td>
 												<td className='td_btn'>
 													<i className="fa fa-minus-circle" onClick={() => removeWebsite(website)}></i>
