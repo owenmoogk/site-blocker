@@ -55,7 +55,7 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
 	if (request.host) {
 
 		blockedSites = JSON.parse(localStorage.getItem('sites')) || [];
-		blockSubpages = false
+		blockSubpages = (localStorage.getItem('blockSubpages') || "true") === "true"
 		var redirect, blocked;
 
 		// slicing the fullsite to be proper
@@ -66,6 +66,7 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
 		if (fullSite.endsWith('/')){
 			fullSite = fullSite.slice(0, -1)
 		}
+
 		host = request.value
 		
 		// to block all subpages use the host (value), to only block this page use the site

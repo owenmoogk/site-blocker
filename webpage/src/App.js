@@ -8,6 +8,13 @@ export default function App() {
 	const [newWebsite, setNewWebsite] = useState()
 	const [newRedirect, setNewRedirect] = useState()
 
+	const [blockSubpages, setBlockSubpages] = useState()
+
+	function toggleSubpages(){
+		localStorage.setItem("blockSubpages", !blockSubpages)
+		setBlockSubpages(blockSubpages ? false : true)
+	}
+
 	function removeWebsite(websiteToBeRemoved) {
 		setWebsites(websites.filter(
 			function (element) {
@@ -50,7 +57,6 @@ export default function App() {
 		setNewWebsite('')
 		setNewRedirect('')
 		setErrorMessage('')
-
 	}
 
 	function isValidWebsite(website){
@@ -62,6 +68,7 @@ export default function App() {
 		if (currWebsites != null) {
 			setWebsites(currWebsites)
 		}
+		setBlockSubpages((localStorage.getItem('blockSubpages') || "true") === "true")
 	}, [])
 
 	return (
@@ -78,7 +85,7 @@ export default function App() {
 				<br />
 				<div className="row" id="dashboard">
 
-					<div className="col-lg-12">
+					<div className="col-lg-12 nopadding">
 						<form onSubmit={(e) => addWebsite(e)}>
 							<div className="input-group">
 								<input type="text" className="form-control input-md" placeholder="Add site to block" onChange={(e) => setNewWebsite(e.target.value)} value={newWebsite} />
@@ -94,7 +101,14 @@ export default function App() {
 						<p>{errorMessage}</p>
 					</div>
 
-					<div className="col-lg-12">
+					<p>Block Subpages: <span id='subpageBlock'><button class='btn btn-primary' onClick={() => toggleSubpages()}>
+						{blockSubpages
+							? "ON"
+							: "OFF"
+						}
+					</button></span></p>
+
+					<div className="col-lg-12 nopadding">
 						<div className="table">
 							<table className="table table-bordered table-hover">
 								<thead>

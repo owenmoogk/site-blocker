@@ -81,3 +81,7 @@ input {
 	font-size: 24px;
 	cursor: pointer;
 }
+
+.nopadding{
+	padding: 0;
+}
