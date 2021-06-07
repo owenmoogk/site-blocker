@@ -73,39 +73,20 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
 
 		var isSiteInList = has_prop(blockedSites, request.value);
 
-		var blockSubdomains = isEqual('subdomainOption', 1);
-		var blockKeyOption = isEqual('blockKeyOption', 1);
-		var blockPattern = isEqual('blockPattern', 1);
 
 
-		blockSubdomains = blockSubdomains && isSubdomainInList(blockedSites, currentSite);
-		var isBlockedByTag = blockKeyOption && isBlockedByKey(currentSite, fullSite);
-		var blockByPattern = isBlockedByPattern(blockKeyOption, blockPattern, currentSite);
 
 		//If in block or subdomain list or contains blocked keys
-		if (isSiteInList || blockSubdomains || isBlockedByTag || blockByPattern) {
-			blocked = true;
-
-			if (redirectUrl && !redirectUrl.includes(currentSite) && !currentSite.includes(redirectUrl)) {
-				chrome.tabs.update(sender.tab.id, { url: redirectUrl });
-				return;
 			}
+		}
 
-			var close_tab = isEqual('close_option', 1);
-			if (close_tab) {
-				chrome.tabs.query({}, function (activeTabs) {
-					var tabsCount = activeTabs.length;
-					if (tabsCount === 1) {
-						chrome.tabs.create({
-							url: 'chrome://newtab'
-						})
-					}
-					chrome.tabs.remove(sender.tab.id);
+		// var blockSubdomains = localStorage.getItem('subdomainOption') === 1;
+		// blockSubdomains = blockSubdomains && isSubdomainInList(blockedSites, currentSite);
 
-				});
-
-			}
-
+		//If in block or subdomain list or contains blocked keys
+		// if (isSiteInList || blockSubdomains) {
+		if (isSiteInList){
+			blocked = true
 		}
 		else {
 			blocked = false;
@@ -129,6 +110,7 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
 		}
 
 		sendResponse({ host: blocked });
+		sendResponse({ host: blocked, redirect: redirect });
 
 	}
 });
@@ -216,17 +198,6 @@ function has_prop(arr, val) {
 	return arr.includes(val);
 }
 
-function isBlockedByPattern(blockKeyOption, blockPattern, currentSite) {
-	if (!blockKeyOption || !blockPattern) return false;
-	var blockPatternFlag = localStorage.getItem('blockPatternFlag');
-	if (blockPatternFlag) {
-		return (new RegExp(blockPattern, blockPatternFlag)).test(currentSite);
-	} else {
-		return (new RegExp(blockPattern)).test(currentSite);
-	}
-
-}
-
 function isSubdomainInList(data, site, getSite) {
 	data = data || [];
 
@@ -238,27 +209,6 @@ function isSubdomainInList(data, site, getSite) {
 		}
 	}
 	return false;
-}
-
-function isBlockedByKey(site, fullSite) {
-	var blockedKeys = JSON.parse(localStorage.getItem('blockKeyList')) || [];
-	for (var i = 0; i < blockedKeys.length; i++) {
-		if (site.indexOf(blockedKeys[i]) > -1 || fullSite.indexOf(blockedKeys[i]) > -1) {
-			return true;
-		}
-	}
-	return false;
-}
-
-function add_to_block(mass, val) {
-	mass.push(val);
-	return mass;
-}
-
-function remove_site(mass, val) {
-	var index = mass.indexOf(val);
-	mass.splice(index, 1);
-	return mass;
 }
 
 function getLocation(href) {
