@@ -1,5 +1,3 @@
-var currentSite = '';
-var blocked = false;
 var blockedSites = JSON.parse(localStorage.getItem('sites')) || [];
 var redirectUrl = localStorage.getItem('redirect_url');
 var activeTabs = {};
@@ -57,38 +55,33 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
 	if (request.host) {
 
 		blockedSites = JSON.parse(localStorage.getItem('sites')) || [];
+		blockSubpages = false
+		var redirect, blocked;
 
-		currentSite = request.value;
-		var fullSite = request.site;
-		fullSite = getLocation(fullSite).hostname + decodeURIComponent(getLocation(fullSite).pathname);
+		// slicing the fullsite to be proper
+		fullSite = request.site
 		fullSite = fullSite.replace('www.', '');
 		fullSite = fullSite.replace('http://', '');
 		fullSite = fullSite.replace('https://', '');
+		if (fullSite.endsWith('/')){
+			fullSite = fullSite.slice(0, -1)
+		}
+		console.log(fullSite)
+		host = request.value
+		
+		// to block all subpages use the host (value), to only block this page use the site
+		checkingWebsite = blockSubpages ? host : fullSite
 
-		var isSiteInList;
-		var redirect;
+		// block all the pages hosted on this base url, request.value
 		for (var currSite of blockedSites){
-			if (currSite.block == request.value){
-				isSiteInList = true
+			if (currSite.block == checkingWebsite){
+				blocked = true
 				redirect = currSite.redirect
 				break
 			}
 		}
 
-		// var blockSubdomains = localStorage.getItem('subdomainOption') === 1;
-		// blockSubdomains = blockSubdomains && isSubdomainInList(blockedSites, currentSite);
-
-		//If in block or subdomain list or contains blocked keys
-		// if (isSiteInList || blockSubdomains) {
-		if (isSiteInList){
-			blocked = true
-		}
-		else {
-			blocked = false;
-		}
-
 		sendResponse({ host: blocked, redirect: redirect });
-
 	}
 });
 
