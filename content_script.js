@@ -11,16 +11,18 @@ chrome.extension.sendRequest(
 	},
 	function (response) {
 		if (response.host === true) {
-			block_site();
+			block_site(response.redirect);
 		}
 	}
 );
 
 // when the site is blocked it will redirect to another page
-function block_site() {
-	window.stop();
-	window.location.replace('https://janik.codes')
+function block_site(redirect) {
+	window.stop()
+	if (redirect != '#'){
+		window.location.replace(redirect)
+	}
+	else{
+		window.close()
+	}
 }
-
-
-
