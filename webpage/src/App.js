@@ -4,8 +4,9 @@ import React, { useEffect, useState } from 'react'
 export default function App() {
 
 	const [websites, setWebsites] = useState([])
-	const [newWebsite, setNewWebsite] = useState()
 	const [errorMessage, setErrorMessage] = useState()
+	const [newWebsite, setNewWebsite] = useState()
+	const [newRedirect, setNewRedirect] = useState()
 
 	function removeWebsite(websiteToBeRemoved) {
 		setWebsites(websites.filter(
@@ -19,20 +20,41 @@ export default function App() {
 		localStorage.setItem("sites", JSON.stringify(websites))
 	}
 
-	function addWebsite() {
-		if ((!newWebsite.includes(' ')) && newWebsite.includes('.')) {
-			if (websites.indexOf(newWebsite) === -1) {
-				setWebsites(websites.concat([newWebsite]))
-				setNewWebsite('')
-				setErrorMessage('')
+	function addWebsite(e) {
+		e.preventDefault()
+
+		// checking the website to be blocked
+		if (!newWebsite || !isValidWebsite(newWebsite)){
+			setErrorMessage("Please enter a valid website")
+			return
+		}
+		
+		// checking the redirect website
+		if (newRedirect){
+			if (!isValidWebsite(newRedirect)) {
+				setErrorMessage("Please enter a valid redirect website.")
+				return
 			}
-			else {
+		}
+
+		// checking if the website has already been blocked
+		for (const website of websites){
+			if (website.block == newWebsite){
 				setErrorMessage("That website is already blocked.")
+				return
 			}
 		}
-		else {
-			setErrorMessage('That is not a valid website')
-		}
+
+		// action
+		setWebsites(websites.concat([{block: newWebsite, redirect: newRedirect || '#'}]))
+		setNewWebsite('')
+		setNewRedirect('')
+		setErrorMessage('')
+
+	}
+
+	function isValidWebsite(website){
+		return (!website.includes(' ') && website.includes('.'))
 	}
 
 	useEffect(() => {
@@ -57,16 +79,15 @@ export default function App() {
 				<div className="row" id="dashboard">
 
 					<div className="col-lg-12">
-						<div className="input-group">
-
-							<input type="text" className="form-control input-md" placeholder="Add site to block" onChange={(e) => setNewWebsite(e.target.value)} value={newWebsite} />
-
-							<span className="input-group-btn">
-								<button className="btn btn-primary btn-md" id="submitButton" onClick={() => addWebsite()}>
+						<form onSubmit={(e) => addWebsite(e)}>
+							<div className="input-group">
+								<input type="text" className="form-control input-md" placeholder="Add site to block" onChange={(e) => setNewWebsite(e.target.value)} value={newWebsite} />
+								<input type="text" className="form-control input-md" placeholder="Add redirect (optional)" onChange={(e) => setNewRedirect(e.target.value)} value={newRedirect} />
+								<button type='submit' className="btn btn-primary btn-md">
 									Add
-							</button>
-							</span>
-						</div>
+								</button>
+							</div>
+						</form>
 
 						<br />
 
@@ -79,8 +100,11 @@ export default function App() {
 								<thead>
 									<tr>
 										<th>
-											Blocked List ({websites.length})
-									</th>
+											Blocked ({websites.length})
+										</th>
+										<th>
+											Redirects
+										</th>
 										<th className="action_btns">
 											<div className="btn-group">
 												<button className="btn btn-primary" title="Save changes">
@@ -99,7 +123,10 @@ export default function App() {
 										return (
 											<tr key={i}>
 												<td className='site_name'>
-													<a>{website}</a>
+													<a>{website.block}</a>
+												</td>
+												<td className='site_name'>
+													<a>{website.redirect}</a>
 												</td>
 												<td className='td_btn'>
 													<i className="fa fa-minus-circle" onClick={() => removeWebsite(website)}></i>

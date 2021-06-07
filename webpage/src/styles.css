@@ -53,20 +53,22 @@ a, a:hover, a:focus {
 	height: 50px;
 }
 
-table.extra-config label {
-	font-weight: normal;
-}
-
 td.action_btns {
 	width: 100px;
 }
 
-.input-group input.form-control {
-	height: 42px;
+form{
+	width: 100%;
 }
 
-input.form-control {
-	height: 36px;
+.input-group{
+	display: flex;
+	flex-direction: row;
+}
+
+input {
+	height: 42px;
+	flex: 1;
 }
 
 .td_btn {
@@ -78,8 +80,4 @@ input.form-control {
 	color: #FF0000;
 	font-size: 24px;
 	cursor: pointer;
-}
-
-.navbar {
-	border: 0;
 }
