@@ -3,11 +3,11 @@
 	"manifest_version": 2,
 	"name": "Site blocker",
 	"icons": {
-		"16": "16.png",
-		"32": "32.png",
-		"48": "48.png",
-		"128": "128.png",
-		"512": "512.png"
+		"16": "icons/16.png",
+		"32": "icons/32.png",
+		"48": "icons/48.png",
+		"128": "icons/128.png",
+		"512": "icons/512.png"
 	},
 	"options_page": "webpage/build/index.html",
 	"browser_action": {
