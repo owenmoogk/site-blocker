@@ -20,6 +20,7 @@
 	},
 	"content_scripts": [
 		{
+			"css": ["styles.css"],
 			"js": [
 				"content_script.js"
 			],
